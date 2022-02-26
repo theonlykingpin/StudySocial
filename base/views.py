@@ -1,18 +1,17 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
-from base.forms import RoomForm, UserForm
+from base.forms import RoomForm, UserForm, MyUserCreationForm
 from base.models import *
 
 
 def register_page(request):
-    form = UserCreationForm()
+    form = MyUserCreationForm()
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = MyUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
@@ -31,13 +30,13 @@ def login_page(request):
     if request.user.is_authenticated:
         return redirect('home')
     if request.method == 'POST':
-        username = request.POST.get('username').lower()
+        email = request.POST.get('email').lower()
         password = request.POST.get('password')
         try:
-            User.objects.get(username=username)
+            User.objects.get(email=email)
         except:
             messages.error(request, 'User does not exist.')
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
             return redirect('home')
