@@ -5,7 +5,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
-
 from base.forms import RoomForm, UserForm
 from base.models import *
 
